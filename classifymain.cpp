@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 extern "C" {
 #include "cuter.h"
 }
@@ -10,6 +11,7 @@ int MAINENTRY () {
   long int nvar = 0, ncon = 0;
   long int nmax, mmax;
   long int funit = 42, ierr = 0, fout = 6;
+  char pname[11];
 
   bool has_eq = false;
   bool has_ineq = false;
@@ -25,6 +27,8 @@ int MAINENTRY () {
 
   if (ncon == 0) {
     USETUP ((&funit), (&fout), (&nvar), x, bl, bu, (&nmax));
+    char vnames[11*nvar];
+    UNAMES (&nvar, pname, vnames);
   } else {
     mmax = ncon;
     double y[ncon], cl[ncon], cu[ncon];
@@ -32,6 +36,9 @@ int MAINENTRY () {
     long int efirst = 0, lfirst = 0, nvfirst = 0;
 
     CSETUP ((&funit), (&fout), (&nvar), (&ncon), x, bl, bu, (&nmax), equatn, linear, y, cl, cu, (&mmax), (&efirst), (&lfirst), (&nvfirst));
+
+    char vnames[nvar*11], gnames[ncon*11];
+    CNAMES (&nvar, &ncon, pname, vnames, gnames);
 
     for (int i = 0; i < ncon; i++) {
       if (equatn[i])
@@ -53,30 +60,34 @@ int MAINENTRY () {
       break;
   }
 
-  cout << "FILENAME     ";
+  string outfile("classification.");
   if (has_eq && has_ineq)
-    cout << "gencon";
+    outfile += "gencon";
   else if (has_eq)
-    cout << "equ";
+    outfile += "equ";
   else if (has_ineq)
-    cout << "ineq";
+    outfile += "ineq";
   else
-    cout << "unc";
-  cout << " ";
+    outfile += "unc";
+  outfile += ".";
 
   if (has_upper && has_lower)
-    cout << "box";
+    outfile += "box";
   else if (has_upper)
-    cout << "upper";
+    outfile += "upper";
   else if (has_lower)
-    cout << "lower";
+    outfile += "lower";
   else
-    cout << "free";
-  cout << " ";
+    outfile += "free";
+  outfile += ".";
 
   if (has_eq || has_ineq)
-    cout << (is_linear ? "linear" : "nonlin");
-  cout << endl;
+    outfile += (is_linear ? "linear" : "nonlin");
+  pname[10] = 0;
+
+  ofstream file(outfile.c_str(), ios_base::app);
+  file << pname << endl;
+  file.close();
         
   FORTRAN_CLOSE ((&funit), (&ierr));
 
