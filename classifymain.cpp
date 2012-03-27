@@ -79,10 +79,11 @@ int MAINENTRY () {
     outfile += "lower";
   else
     outfile += "free";
-  outfile += ".";
 
-  if (has_eq || has_ineq)
+  if (has_eq || has_ineq) {
+    outfile += ".";
     outfile += (is_linear ? "linear" : "nonlin");
+  }
   pname[10] = 0;
 
   ofstream file(outfile.c_str(), ios_base::app);
