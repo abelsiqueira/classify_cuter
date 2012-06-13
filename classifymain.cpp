@@ -18,6 +18,7 @@ int MAINENTRY () {
   bool has_upper = false;
   bool has_lower = false;
   bool is_linear = true;
+  bool has_fixed = false;
 
   FORTRAN_OPEN ((&funit), fname, (&ierr));
   CDIMEN ((&funit), (&nvar), (&ncon));
@@ -56,7 +57,9 @@ int MAINENTRY () {
       has_lower = true;
     if (bu[i] < 1e10)
       has_upper = true;
-    if (has_lower && has_upper)
+    if (bl[i] == bu[i])
+      has_fixed = true;
+    if (has_lower && has_upper && has_fixed)
       break;
   }
 
@@ -79,6 +82,9 @@ int MAINENTRY () {
     outfile += "lower";
   else
     outfile += "free";
+
+  if (has_fixed)
+    outfile += ".fixed";
 
   if (has_eq || has_ineq) {
     outfile += ".";
