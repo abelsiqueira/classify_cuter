@@ -1,25 +1,30 @@
 CLASSIFY CUTER
 ==============
 
-This library will classify the cuter problem generating 
-the file classified.cuter in the format
+This software was made with support from FAPESP, for my PhD research.
 
-FILE [contraints type] [bounds type] [linear?]
+This library will classify the given CUTEr problem, including it in the
+file
+
+   classification.<con>.<lim><fix><lin>
 
 Where 
 
-[constraints type] can be
+<con> can be
 gencon
 equ
 ineq
 unc
 
-[bounds type] can be
+<lim>
 free
 box
 upper
 lower
 
-[linear?] can be
+<fix> can be null or
+.fixed
+
+<lin> can be null or
 linear
 nonlin
