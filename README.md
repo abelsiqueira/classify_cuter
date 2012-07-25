@@ -16,4 +16,4 @@ Where
 
 [fix] may not appear or be .fixed
 
-[lin] may not appear or be linear or nonlin
+[lin] may not appear or be .linear or .nonlin
